@@ -1,3 +1,5 @@
+module Problems (Problem, problemList) where
+
 import Data.List
 import Data.Function
 import Data.Char
@@ -321,5 +323,3 @@ euler1_f multiples top =
             || condition rest a
         all = filter (condition multiples) [1..]
     in  sum . takeWhile (<top) $ all
-
-
