@@ -25,7 +25,8 @@ problemList = [euler1,
                euler15,
                euler16,
                euler18,
-               noFours
+               noFours,
+               fizzBuzz
                ]
 
 -- ===============
@@ -69,6 +70,21 @@ factorial n = n * (factorial (n-1))
 -- ===============
 -- Actual Problems
 -- ===============
+
+fizzBuzz = Problem "FizzBuzz"
+    "Print the numbers 1-100, except that whenever a number is divisible by 3 print Fizz, and whenever it is divisible by 5 print Buzz. For 15, print FizzBuzz."
+    (intercalate "\n" $ take 30 fizzBuzz_f)
+
+-- I heard about a solution that doesn't involve checking modulos - how
+-- fun!
+fizzBuzz_f :: [String]
+fizzBuzz_f = zipWith pairUp [1..] fizzbuzzes where
+    fizzes = cycle [[], [], "Fizz"]
+    buzzes = cycle [[], [], [], [], "Buzz"]
+    fizzbuzzes = zipWith (++) fizzes buzzes
+    pairUp :: Int -> String -> String
+    pairUp x [] = show x
+    pairUp _ s = s
 
 noFours = Problem "No Fours"
     "In China, number '4' is not good because it is has the same pronunciation as 'death' in Chinese. so there is a new number system which we may make 4 disappear in the current decimal system. like: 1,2,3,5,6,7.......13,15.......23,25.......33,35....39,50........ here 5 is 4 in decimal system, and 15 is 13..... so write a function, input a positive number and output should be like this:\n1 -> 1;\n2 -> 2;\n5 -> 4;\n4 -> illegal;\n15 -> 13;"
