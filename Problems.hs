@@ -28,7 +28,8 @@ problemList = [euler1,
                euler16,
                euler18,
                noFours,
-               fizzBuzz
+               fizzBuzz,
+               mergeSort
                ]
 
 -- ===============
@@ -72,6 +73,22 @@ factorial n = n * (factorial (n-1))
 -- ===============
 -- Actual Problems
 -- ===============
+
+mergeSort = Problem "Merge Sort"
+    "Perform mergesort on a list of things. This example sorts the list [2,4,5,2,3,1,2,2,4,6,3,4,7,2,4,9,8,4,6,5,7]"
+    (show $ mergeSort_f [2,4,5,2,3,1,2,2,4,6,3,4,7,2,4,9,8,4,6,5,7])
+
+mergeSort_f :: (Ord a) => [a] -> [a]
+mergeSort_f [] = []
+mergeSort_f (x:[]) = [x]
+mergeSort_f xs = merge (mergeSort_f firstHalf) (mergeSort_f secondHalf) [] where
+    (firstHalf, secondHalf) = splitAt ((length xs) `div` 2) xs
+    merge [] ys acc = (reverse acc) ++ ys
+    merge xs [] acc = (reverse acc) ++ xs
+    merge (x:xs) (y:ys) acc = case compare x y of
+        LT -> merge xs (y:ys) (x:acc)
+        GT -> merge (x:xs) ys (y:acc)
+        EQ -> merge xs ys (x:y:acc)
 
 fizzBuzz = Problem "FizzBuzz"
     "Print the numbers 1-100, except that whenever a number is divisible by 3 print Fizz, and whenever it is divisible by 5 print Buzz. For 15, print FizzBuzz."
