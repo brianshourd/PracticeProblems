@@ -29,7 +29,8 @@ problemList = [euler1,
                euler18,
                noFours,
                fizzBuzz,
-               mergeSort
+               mergeSort,
+               linked
                ]
 
 -- ===============
@@ -73,6 +74,52 @@ factorial n = n * (factorial (n-1))
 -- ===============
 -- Actual Problems
 -- ===============
+
+linked = Problem "Linked List"
+    "Create a data structure containing a linked list"
+    (show $ dedupL $ createL [1,2,4,3,2])
+
+data Linked a = Linked {
+    headL :: Node a
+    } 
+
+tailL :: Linked a -> Linked a
+tailL (Linked E) = Linked E
+tailL (Linked h) = Linked $ next h
+
+instance (Show a) => Show (Linked a) where
+    show (Linked E) = "End"
+    show (Linked (Node x n)) = (show x) ++ ", " ++ (show (Linked n))
+
+data Node a = E | Node {
+    val :: a,
+    next :: Node a
+    } 
+
+instance (Show a) => Show (Node a) where
+    show E = "E"
+    show (Node x n) = (show x)
+
+consL :: a -> Linked a -> Linked a
+consL x (Linked h) = Linked h' where
+    h' = Node x h
+
+createL :: [a] -> Linked a
+createL xs = createL' (reverse xs) (Linked E) where
+    createL' [] l = l
+    createL' (x:xs) l = createL' xs (consL x l)
+
+findL :: (Eq a) => Linked a -> a -> Bool
+findL (Linked E) _ = False
+findL (Linked h) x = case x == (val h) of
+    True  -> True
+    False -> findL (Linked $ next h) x
+
+dedupL :: (Eq a) => Linked a -> Linked a 
+dedupL (Linked E) = Linked E
+dedupL l@(Linked h) = case findL (tailL l) (val h) of
+    True  -> dedupL $ tailL l
+    False -> consL (val h) $ dedupL $ tailL l
 
 mergeSort = Problem "Merge Sort"
     "Perform mergesort on a list of things. This example sorts the list [2,4,5,2,3,1,2,2,4,6,3,4,7,2,4,9,8,4,6,5,7]"
