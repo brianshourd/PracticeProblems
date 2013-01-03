@@ -30,7 +30,8 @@ problemList = [euler1,
                noFours,
                fizzBuzz,
                mergeSort,
-               linked
+               linked,
+               euler19
                ]
 
 -- ===============
@@ -74,6 +75,28 @@ factorial n = n * (factorial (n-1))
 -- ===============
 -- Actual Problems
 -- ===============
+
+euler19 = Problem "Euler 19"
+    "You are given the following information, but you may prefer to do some research for yourself.\n \n 1 Jan 1900 was a Monday.\n Thirty days has September,\n April, June and November.\n All the rest have thirty-one,\n Saving February alone,\n Which has twenty-eight, rain or shine.\n And on leap years, twenty-nine.\n A leap year occurs on any year evenly divisible by 4, but not on a century unless it is divisible by 400.\n How many Sundays fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)?"
+    (show euler19_f)
+
+euler19_f :: Int
+euler19_f = fst $ foldl helper (0,2) [1901..2000] where
+    helper :: (Int, Int) -> Int -> (Int, Int)
+    helper (total, offset) year = (total + (suns offset year), (offset + (days year)) `mod` 7)
+    -- suns counts the number of sundays on first
+    -- of the months in the supplied year
+    suns start year = fst $ foldl (\(total, offset) month -> (increase offset total, (offset + month) `mod` 7)) (0,start) (months year) where
+        increase 0 = (+1)
+        increase _ = id
+        months y = case days y of
+            365 -> [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+            366 -> [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    days year = case (mod year 4, mod year 100, mod year 400) of
+        (0,0,0) -> 366
+        (0,0,_) -> 365
+        (0,_,_) -> 366
+        (_,_,_) -> 365
 
 linked = Problem "Linked List"
     "Create a data structure containing a linked list"
